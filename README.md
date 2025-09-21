@@ -169,8 +169,9 @@ MIT License - see LICENSE file for details.
 4. Add tests
 5. Submit a pull request
 
-## Support
+## Contributers
 
-For issues and questions:
-- GitHub Issues: [your-repo/issues]
-- Email: support@quickscore.ai
+Mehardeep Singh Sandhu
+
+[GitHub](https://github.com/Mehardeep79)
+
