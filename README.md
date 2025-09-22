@@ -2,6 +2,25 @@
 
 A comprehensive AI-powered platform for analyzing pre-seed startups, extracting insights from pitch decks, and providing investment recommendations.
 
+<p align="center">
+  <img src="assets/flow.png" width="40%" alt="Flow">
+</p>
+
+<p align="center"><em>Flow Diagram</em></p>
+
+<p align="center">
+  <img src="assets/streamlit1.png" width="60%" alt="streamlit1">
+</p>
+
+
+<p align="center"><em>Streamlit Dashboard</em></p>
+
+<p align="center">
+  <img src="assets/dashboard1.png" width="60%" alt="dashboard1">
+</p>
+
+<p align="center"><em>QuickScore Dashboard</em></p>
+
 ## Features
 
 - **Document Processing**: Extract and analyze pitch decks, financial documents
