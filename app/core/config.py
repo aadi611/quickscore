@@ -2,6 +2,8 @@
 Core configuration settings for QuickScore application.
 """
 import os
+import numpy as np
+import pandas as pd
 from typing import List
 from pydantic_settings import BaseSettings
 
