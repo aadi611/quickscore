@@ -1,45 +1,121 @@
+
 """
-Dependencies for FastAPI endpoints.
+Application dependencies for FastAPI endpoints.
+
+Provides dependency providers for database sessions, document processing,
+AI evaluation, scoring, authentication, and rate limiting.
 """
-from typing import Generator
+
+from collections.abc import Generator
+from typing import Annotated, TypedDict
+
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.database import get_db
-from app.services.document_processor import DocumentProcessor
-from app.services.ai_evaluator import StartupEvaluator
 from app.core.scoring import ScoringEngine
+from app.models.database import get_db
+from app.services.ai_evaluator import StartupEvaluator
+from app.services.document_processor import DocumentProcessor
 
+
+# ---------------------------------------------------------------------------
+# Database
+# ---------------------------------------------------------------------------
 
 def get_database() -> Generator[Session, None, None]:
-    """Get database session dependency."""
-    return get_db()
+    """
+    Provide a database session for the duration of a request.
 
+    The underlying get_db dependency is responsible for session cleanup.
+    """
+    yield from get_db()
+
+
+# ---------------------------------------------------------------------------
+# Application Services
+# ---------------------------------------------------------------------------
 
 def get_document_processor() -> DocumentProcessor:
-    """Get document processor dependency."""
+    """Provide a document processor instance."""
     return DocumentProcessor()
 
 
 def get_ai_evaluator() -> StartupEvaluator:
-    """Get AI evaluator dependency."""
+    """Provide an AI evaluator instance."""
     return StartupEvaluator()
 
 
 def get_scoring_engine() -> ScoringEngine:
-    """Get scoring engine dependency."""
+    """Provide a scoring engine instance."""
     return ScoringEngine()
 
 
-# Rate limiting dependency (placeholder for now)
-async def rate_limit_check():
-    """Rate limiting check - would implement actual rate limiting."""
-    # TODO: Implement actual rate limiting with Redis
-    pass
+# ---------------------------------------------------------------------------
+# Authentication
+# ---------------------------------------------------------------------------
+
+class CurrentUser(TypedDict):
+    """Authenticated user information."""
+
+    user_id: str
+    is_authenticated: bool
 
 
-# Authentication dependency (placeholder for now)
-async def get_current_user():
-    """Get current authenticated user - placeholder for future auth."""
-    # TODO: Implement actual authentication
-    return {"user_id": "anonymous", "is_authenticated": False}
+async def get_current_user() -> CurrentUser:
+    """
+    Resolve the currently authenticated user.
+
+    TODO:
+        Replace this placeholder with JWT/OAuth2 authentication.
+    """
+    return {
+        "user_id": "anonymous",
+        "is_authenticated": False,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Rate Limiting
+# ---------------------------------------------------------------------------
+
+async def rate_limit_check() -> None:
+    """
+    Validate request rate limits.
+
+    TODO:
+        Implement Redis-backed rate limiting.
+        Consider using a sliding-window algorithm.
+    """
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Dependency Type Aliases
+# ---------------------------------------------------------------------------
+
+DatabaseSession = Annotated[Session, Depends(get_database)]
+
+DocumentProcessorDependency = Annotated[
+    DocumentProcessor,
+    Depends(get_document_processor),
+]
+
+AIEvaluatorDependency = Annotated[
+    StartupEvaluator,
+    Depends(get_ai_evaluator),
+]
+
+ScoringEngineDependency = Annotated[
+    ScoringEngine,
+    Depends(get_scoring_engine),
+]
+
+CurrentUserDependency = Annotated[
+    CurrentUser,
+    Depends(get_current_user),
+]
+
+RateLimitDependency = Annotated[
+    None,
+    Depends(rate_limit_check),
+]
